@@ -1,0 +1,10 @@
+{
+	"manifest_version": 3,
+	"name": "foo",
+	"description": "This is my first chrome extension",
+	"version": "1.0",
+	"action": {
+		"default_popup": "popup/popup.html",
+		"default_icon": "ninja-bot.png"
+	}
+}
