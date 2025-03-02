@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CodeClock</title>
+  <style>
+    :root {
+      --primary-color: #1e40af;
+      --secondary-color: #3b82f6;
+      --success-color: #22c55e;
+      --warning-color: #eab308;
+      --danger-color: #ef4444;
+      --neutral-color: #94a3b8;
+      --background-color: #f1f5f9;
+      --card-color: #ffffff;
+      --text-color: #1e293b;
+      --text-secondary: #64748b;
+      --border-radius: 16px;
+      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      width: 360px;
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header {
+      text-align: center;
+      padding: 16px;
+      background: var(--card-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section {
+      background: var(--card-color);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    .difficulty-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .difficulty-btn {
+      position: relative;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      text-align: left;
+      font-weight: 600;
+      font-size: 16px;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .difficulty-btn[data-difficulty="Easy"] { background: var(--success-color); }
+    .difficulty-btn[data-difficulty="Easy-Medium"] { background: #4ade80; }
+    .difficulty-btn[data-difficulty="Medium"] { background: var(--warning-color); }
+    .difficulty-btn[data-difficulty="Medium-Hard"] { background: #fb923c; }
+    .difficulty-btn[data-difficulty="Hard"] { background: var(--danger-color); }
+
+    .difficulty-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(110%);
+    }
+
+    .difficulty-desc {
+      display: block;
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 4px;
+      font-weight: normal;
+    }
+
+    .countdown-content {
+      text-align: center;
+      padding: 32px 0;
+    }
+
+    .countdown-number {
+      font-size: 72px;
+      font-weight: bold;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin: 16px 0;
+      animation: pulse 1s infinite;
+    }
+
+    .countdown-text {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .timer-content {
+      text-align: center;
+    }
+
+    .timer-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--success-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    .time-display {
+      font-size: 48px;
+      font-weight: bold;
+      font-family: monospace;
+      margin: 24px 0;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--danger-color);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .primary-btn:hover {
+      filter: brightness(110%);
+      transform: translateY(-2px);
+    }
+
+    .dashboard-link {
+      text-align: center;
+      padding: 12px;
+    }
+
+    .dashboard-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .dashboard-link a:hover {
+      color: var(--secondary-color);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CodeClock</h1>
+    </div>
+    
+    <div id="difficulty-selector" class="section">
+      <h2>Select Difficulty</h2>
+      <div class="difficulty-buttons">
+        <button class="difficulty-btn" data-difficulty="Easy">
+          Easy
+          <span class="difficulty-desc">Beginner-friendly problems</span>
+        </button>
+        <button class="difficulty-btn" data-difficulty="Easy-Medium">
+          Easy-Medium
+          <span class="difficulty-desc">Slightly challenging</span>
+        </button>
+        <button class="difficulty-btn" data-difficulty="Medium">
+          Medium
+          <span class="difficulty-desc">Moderate complexity</span>
+        </button>
+        <button class="difficulty-btn" data-difficulty="Medium-Hard">
+          Medium-Hard
+          <span class="difficulty-desc">Advanced concepts</span>
+        </button>
+        <button class="difficulty-btn" data-difficulty="Hard">
+          Hard
+          <span class="difficulty-desc">Complex algorithms</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="countdown" class="section hidden">
+      <div class="countdown-content">
+        <h2>Get Ready!</h2>
+        <div class="countdown-number">3</div>
+        <div class="countdown-text">Starting timer...</div>
+      </div>
+    </div>
+
+    <div id="timer" class="section hidden">
+      <div class="timer-content">
+        <div class="timer-header">
+          <div class="status-dot"></div>
+          <h2>Timer Running</h2>
+        </div>
+        <div class="time-display">00:00:00</div>
+        <button id="end-timer" class="primary-btn">End Timer</button>
+      </div>
+    </div>
+
+    <div class="dashboard-link">
+      <a href="dashboard.html" target="_blank">View Analysis Dashboard →</a>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

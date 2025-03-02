@@ -1,41 +1,24 @@
 {
-  "name": "code-timer-extension",
+  "name": "code-clock",
   "version": "1.0.0",
-  "private": true,
+  "description": "Chrome extension for tracking coding problem-solving time",
   "scripts": {
-    "build": "webpack --mode production",
-    "watch": "webpack --watch",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "prettier": "prettier --write .",
-    "dev": "webpack serve --mode development"
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch --config webpack.config.js",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "chart.js": "^4.4.8",
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.6",
-    "@babel/preset-env": "^7.18.6",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.18.6",
-    "@types/chrome": "^0.0.183",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "babel-loader": "^8.2.5",
-    "eslint": "^8.19.0",
-    "eslint-plugin-react": "^7.30.1",
-    "prettier": "^2.7.1",
-    "ts-loader": "^9.3.1",
-    "typescript": "^4.7.4",
-    "webpack": "^5.73.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.15.2"
-  },
-  "prettier": {
-    "arrowParens": "always",
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "none"
+    "@types/chart.js": "^2.9.40",
+    "@types/chrome": "^0.0.246",
+    "@types/node": "^20.8.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4"
   }
 }
