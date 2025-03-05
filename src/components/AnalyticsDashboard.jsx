@@ -129,44 +129,43 @@ const AnalyticsDashboard = () => {
   };
 
   const getFilteredData = () => {
-    let filtered = [...data];
-    
+    let filteredData = [...data];
+
+    // Platform filtering
     if (platformFilter !== 'all') {
       if (platformFilter === 'Other') {
-        // For 'Other', show only data from unsupported platforms
-        filtered = filtered.filter(item => {
+        filteredData = filteredData.filter(item => {
           const url = item.url.toLowerCase();
           return !Object.values(SUPPORTED_PLATFORMS).some(domain => 
             url.includes(domain.toLowerCase())
           );
         });
       } else if (platformFilter !== 'all') {
-        // For specific platforms, filter by domain
         const domain = SUPPORTED_PLATFORMS[platformFilter];
-        filtered = filtered.filter(item => 
+        filteredData = filteredData.filter(item => 
           item.url.toLowerCase().includes(domain.toLowerCase())
         );
       }
     }
-    
-    // If not showing 'Other', exclude unsupported platforms from 'all'
-    if (platformFilter === 'all') {
-      filtered = filtered.filter(item => {
-        const url = item.url.toLowerCase();
-        return Object.values(SUPPORTED_PLATFORMS).some(domain => 
-          url.includes(domain.toLowerCase())
-        );
-      });
+
+    // Difficulty filtering
+    if (difficultyFilter !== 'all') {
+      filteredData = filteredData.filter(item => 
+        item.difficulty === difficultyFilter
+      );
     }
 
+    // Time period filtering
     const now = Date.now();
-    const timeFilters = {
-      week: now - 7 * 24 * 60 * 60 * 1000,
-      month: now - 30 * 24 * 60 * 60 * 1000,
-      year: now - 365 * 24 * 60 * 60 * 1000
+    const timeRanges = {
+      week: now - (7 * 24 * 60 * 60 * 1000),
+      month: now - (30 * 24 * 60 * 60 * 1000),
+      year: now - (365 * 24 * 60 * 60 * 1000)
     };
 
-    return filtered.filter(item => item.timestamp >= timeFilters[timeFilter]);
+    return filteredData.filter(item => 
+      item.timestamp >= timeRanges[timeFilter]
+    );
   };
 
   const processData = (data) => {

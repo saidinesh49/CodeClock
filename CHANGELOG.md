@@ -20,4 +20,5 @@
 
 ### Fixed
 - Fixed time formatting in analytics dashboard statistics
-- Added proper time formatting function for average solving time display 
+- Added proper time formatting function for average solving time display
+- Fixed difficulty filter functionality in analytics dashboard 
