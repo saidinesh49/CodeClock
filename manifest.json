@@ -5,7 +5,17 @@
   "description": "Track and analyze your coding problem-solving time across different difficulty levels",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.leetcode.com/*",
+    "*://*.hackerrank.com/*",
+    "*://*.codechef.com/*",
+    "*://*.codeforces.com/*",
+    "*://*.atcoder.jp/*",
+    "*://*.geeksforgeeks.org/*",
+    "*://*.hackerearth.com/*"
   ],
   "action": {
     "default_popup": "popup.html",

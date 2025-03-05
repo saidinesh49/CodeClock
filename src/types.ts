@@ -18,11 +18,19 @@ export interface TimerResult {
 }
 
 export const DIFFICULTY_COLORS = {
-	Easy: "#22c55e", // Green
-	"Easy-Medium": "#4ade80", // Light Green
-	Medium: "#eab308", // Yellow
-	"Medium-Hard": "#fb923c", // Orange
-	Hard: "#ef4444", // Red
+	easy: "#00B8A3", // LeetCode Easy green
+	medium: "#FFA116", // LeetCode Medium yellow
+	hard: "#FF375F", // LeetCode Hard red
+} as const;
+
+export const LEETCODE_COLORS = {
+	background: "#282828",
+	text: "#FFFFFF",
+	border: "#3E3E3E",
+	hover: "#404040",
+	success: "#2CBB5D",
+	warning: "#FFA116",
+	error: "#FF375F",
 } as const;
 
 export const SUPPORTED_PLATFORMS = {

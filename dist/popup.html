@@ -1,261 +1,304 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>CodeClock</title>
-  <style>
-    :root {
-      --primary-color: #1e40af;
-      --secondary-color: #3b82f6;
-      --success-color: #22c55e;
-      --warning-color: #eab308;
-      --danger-color: #ef4444;
-      --neutral-color: #94a3b8;
-      --background-color: #f1f5f9;
-      --card-color: #ffffff;
-      --text-color: #1e293b;
-      --text-secondary: #64748b;
-      --border-radius: 16px;
-      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+	<head>
+		<title>CodeClock</title>
+		<style>
+			:root {
+				--primary-color: #1e40af;
+				--secondary-color: #3b82f6;
+				--success-color: #22c55e;
+				--warning-color: #eab308;
+				--danger-color: #ef4444;
+				--neutral-color: #94a3b8;
+				--background-color: #f1f5f9;
+				--card-color: #ffffff;
+				--text-color: #1e293b;
+				--text-secondary: #64748b;
+				--border-radius: 16px;
+				--shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+					0 4px 6px -4px rgb(0 0 0 / 0.1);
+				--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				--leetcode-bg: #282828;
+				--leetcode-card: #313131;
+				--leetcode-text: #eff1f6;
+				--leetcode-border: #3e3e3e;
+				--leetcode-easy: #00b8a3;
+				--leetcode-medium: #ffa116;
+				--leetcode-hard: #ff375f;
+			}
 
-    body {
-      width: 360px;
-      margin: 0;
-      padding: 16px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background-color: var(--background-color);
-      color: var(--text-color);
-    }
+			body {
+				width: 280px;
+				font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+				margin: 0;
+				background: var(--leetcode-bg);
+				color: var(--leetcode-text);
+			}
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+			.container {
+				padding: 12px;
+			}
 
-    .header {
-      text-align: center;
-      padding: 16px;
-      background: var(--card-color);
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-    }
+			.header {
+				text-align: center;
+				padding: 16px;
+				background: var(--card-color);
+				border-radius: var(--border-radius);
+				box-shadow: var(--shadow);
+			}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+			h1 {
+				margin: 0;
+				font-size: 28px;
+				font-weight: 700;
+				background: linear-gradient(
+					135deg,
+					var(--primary-color),
+					var(--secondary-color)
+				);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
 
-    .section {
-      background: var(--card-color);
-      padding: 20px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-    }
+			.section {
+				background: var(--card-color);
+				padding: 20px;
+				border-radius: var(--border-radius);
+				box-shadow: var(--shadow);
+			}
 
-    h2 {
-      margin: 0 0 16px 0;
-      font-size: 16px;
-      color: var(--text-color);
-      font-weight: 600;
-    }
+			h2 {
+				margin: 0 0 16px 0;
+				font-size: 16px;
+				color: var(--text-color);
+				font-weight: 600;
+			}
 
-    .difficulty-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+			.difficulty-buttons {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+			}
 
-    .difficulty-btn {
-      position: relative;
-      padding: 16px;
-      border: none;
-      border-radius: 12px;
-      color: white;
-      cursor: pointer;
-      text-align: left;
-      font-weight: 600;
-      font-size: 16px;
-      transition: var(--transition);
-      overflow: hidden;
-    }
+			.difficulty-btn {
+				width: 100%;
+				padding: 12px;
+				margin: 8px 0;
+				border: 1px solid var(--leetcode-border);
+				background: var(--leetcode-card);
+				color: var(--leetcode-text);
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s;
+				font-size: 14px;
+				font-weight: 500;
+				text-align: left;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
 
-    .difficulty-btn[data-difficulty="Easy"] { background: var(--success-color); }
-    .difficulty-btn[data-difficulty="Easy-Medium"] { background: #4ade80; }
-    .difficulty-btn[data-difficulty="Medium"] { background: var(--warning-color); }
-    .difficulty-btn[data-difficulty="Medium-Hard"] { background: #fb923c; }
-    .difficulty-btn[data-difficulty="Hard"] { background: var(--danger-color); }
+			.difficulty-btn:hover {
+				background: #404040;
+				transform: translateY(-1px);
+			}
 
-    .difficulty-btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(110%);
-    }
+			.difficulty-btn.easy {
+				border-left: 4px solid var(--leetcode-easy);
+			}
+			.difficulty-btn.medium {
+				border-left: 4px solid var(--leetcode-medium);
+			}
+			.difficulty-btn.hard {
+				border-left: 4px solid var(--leetcode-hard);
+			}
 
-    .difficulty-desc {
-      display: block;
-      font-size: 12px;
-      opacity: 0.9;
-      margin-top: 4px;
-      font-weight: normal;
-    }
+			.difficulty-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+			}
 
-    .countdown-content {
-      text-align: center;
-      padding: 32px 0;
-    }
+			.easy .difficulty-dot {
+				background: var(--leetcode-easy);
+			}
+			.medium .difficulty-dot {
+				background: var(--leetcode-medium);
+			}
+			.hard .difficulty-dot {
+				background: var(--leetcode-hard);
+			}
 
-    .countdown-number {
-      font-size: 72px;
-      font-weight: bold;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1;
-      margin: 16px 0;
-      animation: pulse 1s infinite;
-    }
+			.difficulty-desc {
+				display: block;
+				font-size: 12px;
+				opacity: 0.9;
+				margin-top: 4px;
+				font-weight: normal;
+			}
 
-    .countdown-text {
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
+			.countdown-content {
+				text-align: center;
+				padding: 16px;
+				max-width: 160px;
+				margin: 0 auto;
+			}
 
-    .timer-content {
-      text-align: center;
-    }
+			.countdown-number {
+				font-size: 48px;
+				font-weight: bold;
+				background: linear-gradient(
+					135deg,
+					var(--primary-color),
+					var(--secondary-color)
+				);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				line-height: 1;
+				margin: 8px 0;
+				animation: pulse 1s infinite;
+			}
 
-    .timer-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
+			.countdown-text {
+				color: var(--text-secondary);
+				font-size: 12px;
+			}
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--success-color);
-      animation: pulse 1.5s infinite;
-    }
+			.timer-content {
+				text-align: center;
+			}
 
-    .time-display {
-      font-size: 48px;
-      font-weight: bold;
-      font-family: monospace;
-      margin: 24px 0;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+			.timer-header {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				margin-bottom: 20px;
+			}
 
-    .primary-btn {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 12px;
-      background-color: var(--danger-color);
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
+			.status-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background-color: var(--success-color);
+				animation: pulse 1.5s infinite;
+			}
 
-    .primary-btn:hover {
-      filter: brightness(110%);
-      transform: translateY(-2px);
-    }
+			.time-display {
+				font-size: 48px;
+				font-weight: bold;
+				font-family: monospace;
+				margin: 24px 0;
+				background: linear-gradient(
+					135deg,
+					var(--primary-color),
+					var(--secondary-color)
+				);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
 
-    .dashboard-link {
-      text-align: center;
-      padding: 12px;
-    }
+			.primary-btn {
+				width: 100%;
+				padding: 16px;
+				border: none;
+				border-radius: 12px;
+				background-color: var(--danger-color);
+				color: white;
+				font-size: 16px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: var(--transition);
+			}
 
-    .dashboard-link a {
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 14px;
-      transition: var(--transition);
-    }
+			.primary-btn:hover {
+				filter: brightness(110%);
+				transform: translateY(-2px);
+			}
 
-    .dashboard-link a:hover {
-      color: var(--secondary-color);
-    }
+			.dashboard-link {
+				text-align: center;
+				padding: 12px;
+			}
 
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
+			.dashboard-link a {
+				color: #c1d7f4;
+				text-decoration: none;
+				font-weight: 500;
+				font-size: 14px;
+				transition: var(--transition);
+			}
 
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>CodeClock</h1>
-    </div>
-    
-    <div id="difficulty-selector" class="section">
-      <h2>Select Difficulty</h2>
-      <div class="difficulty-buttons">
-        <button class="difficulty-btn" data-difficulty="Easy">
-          Easy
-          <span class="difficulty-desc">Beginner-friendly problems</span>
-        </button>
-        <button class="difficulty-btn" data-difficulty="Easy-Medium">
-          Easy-Medium
-          <span class="difficulty-desc">Slightly challenging</span>
-        </button>
-        <button class="difficulty-btn" data-difficulty="Medium">
-          Medium
-          <span class="difficulty-desc">Moderate complexity</span>
-        </button>
-        <button class="difficulty-btn" data-difficulty="Medium-Hard">
-          Medium-Hard
-          <span class="difficulty-desc">Advanced concepts</span>
-        </button>
-        <button class="difficulty-btn" data-difficulty="Hard">
-          Hard
-          <span class="difficulty-desc">Complex algorithms</span>
-        </button>
-      </div>
-    </div>
+			.dashboard-link a:hover {
+				color: var(--secondary-color);
+			}
 
-    <div id="countdown" class="section hidden">
-      <div class="countdown-content">
-        <h2>Get Ready!</h2>
-        <div class="countdown-number">3</div>
-        <div class="countdown-text">Starting timer...</div>
-      </div>
-    </div>
+			@keyframes pulse {
+				0% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.5;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
 
-    <div id="timer" class="section hidden">
-      <div class="timer-content">
-        <div class="timer-header">
-          <div class="status-dot"></div>
-          <h2>Timer Running</h2>
-        </div>
-        <div class="time-display">00:00:00</div>
-        <button id="end-timer" class="primary-btn">End Timer</button>
-      </div>
-    </div>
+			.hidden {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<h1>CodeClock</h1>
+			</div>
 
-    <div class="dashboard-link">
-      <a href="dashboard.html" target="_blank">View Analysis Dashboard →</a>
-    </div>
-  </div>
-  <script src="popup.js"></script>
-</body>
+			<div id="difficulty-selector" class="section">
+				<h2>Select Difficulty</h2>
+				<div class="difficulty-buttons">
+					<button class="difficulty-btn easy" data-difficulty="easy">
+						<span class="difficulty-dot"></span>
+						Easy
+					</button>
+					<button class="difficulty-btn medium" data-difficulty="medium">
+						<span class="difficulty-dot"></span>
+						Medium
+					</button>
+					<button class="difficulty-btn hard" data-difficulty="hard">
+						<span class="difficulty-dot"></span>
+						Hard
+					</button>
+				</div>
+			</div>
+
+			<div id="countdown" class="section hidden">
+				<div class="countdown-content">
+					<h2>Get Ready!</h2>
+					<div class="countdown-number">3</div>
+					<div class="countdown-text">Starting timer...</div>
+				</div>
+			</div>
+
+			<div id="timer" class="section hidden">
+				<div class="timer-content">
+					<div class="timer-header">
+						<div class="status-dot"></div>
+						<h2>Timer Running</h2>
+					</div>
+					<div class="time-display">00:00:00</div>
+					<button id="end-timer" class="primary-btn">End Timer</button>
+				</div>
+			</div>
+
+			<div class="dashboard-link">
+				<a href="dashboard.html" target="_blank"
+					>View Analysis Dashboard &#8599;</a
+				>
+			</div>
+		</div>
+		<script src="popup.js"></script>
+	</body>
 </html>

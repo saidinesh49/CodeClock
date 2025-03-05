@@ -66,17 +66,21 @@ function startCountdown(): void {
 	let count = 3;
 	difficultySelector.classList.add("hidden");
 	countdownSection.classList.remove("hidden");
+	countdownNumber.textContent = count.toString();
 
+	// Start countdown immediately
 	const countdown = setInterval(() => {
 		count--;
 		if (count > 0) {
 			countdownNumber.textContent = count.toString();
-			countdownText.textContent = "Starting timer...";
 		} else {
 			clearInterval(countdown);
-			startProblemTimer();
+			startProblemTimer().then(() => {
+				// Close popup after a shorter delay
+				setTimeout(() => window.close(), 300);
+			});
 		}
-	}, 1000);
+	}, 800); // Slightly faster countdown
 }
 
 function handleDifficultySelect(event: Event): void {

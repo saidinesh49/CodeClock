@@ -1,5 +1,29 @@
-import { Difficulty, DIFFICULTY_COLORS, Platform, TimerResult } from "./types";
+import type { Chart as ChartType } from "chart.js";
 import Chart from "chart.js/auto";
+import { Difficulty, DIFFICULTY_COLORS } from "./types";
+
+// Type definitions
+interface TimerResult {
+	difficulty: Difficulty;
+	timeMs: number;
+	platform: string;
+	timestamp: number;
+}
+
+interface Session {
+	problems: Problem[];
+	startedAt: number;
+}
+
+interface Problem {
+	endTime?: number;
+	difficulty: Difficulty;
+	timeMs?: number;
+	platform: string;
+	startTime: number;
+}
+
+type TimeRange = "week" | "month" | "year" | "all";
 
 // DOM Elements
 const totalProblemsElement = document.getElementById(
@@ -27,8 +51,8 @@ const statsContainer = document.getElementById(
 const timelineContainer = document.getElementById("timeline") as HTMLDivElement;
 
 // Chart instances
-let difficultyChartInstance: Chart | null = null;
-let progressChartInstance: Chart | null = null;
+let difficultyChartInstance: ChartType | null = null;
+let progressChartInstance: ChartType | null = null;
 
 interface StorageData {
 	results: TimerResult[];
@@ -74,71 +98,54 @@ function filterResults(
 
 // Chart creation functions
 function createDifficultyChart(results: TimerResult[]): void {
-	const difficultyData: { [key in Difficulty]: number[] } = {
-		Easy: [],
-		"Easy-Medium": [],
-		Medium: [],
-		"Medium-Hard": [],
-		Hard: [],
-	};
+	try {
+		const ctx = document.getElementById("difficultyChart") as HTMLCanvasElement;
+		if (!ctx) return;
 
-	results.forEach((result) => {
-		difficultyData[result.difficulty].push(result.timeMs);
-	});
+		if (difficultyChartInstance) {
+			difficultyChartInstance.destroy();
+		}
 
-	const labels = Object.keys(difficultyData);
-	const data = labels.map((difficulty) => {
-		const times = difficultyData[difficulty as Difficulty];
-		return times.length
-			? Math.floor(times.reduce((a, b) => a + b, 0) / times.length / 60000)
-			: 0;
-	});
+		const difficultyData = {
+			easy: [] as number[],
+			medium: [] as number[],
+			hard: [] as number[],
+		};
 
-	const ctx = document.getElementById("difficultyChart") as HTMLCanvasElement;
+		results.forEach((result) => {
+			difficultyData[result.difficulty].push(result.timeMs);
+		});
 
-	if (difficultyChartInstance) {
-		difficultyChartInstance.destroy();
+		const data = Object.entries(difficultyData).map(([difficulty, times]) => ({
+			difficulty,
+			avgTime: times.length
+				? times.reduce((a, b) => a + b, 0) / times.length / 60000
+				: 0,
+		}));
+
+		difficultyChartInstance = new Chart(ctx, {
+			type: "bar",
+			data: {
+				labels: data.map((d) => d.difficulty.toUpperCase()),
+				datasets: [
+					{
+						label: "Average Time (minutes)",
+						data: data.map((d) => d.avgTime),
+						backgroundColor: data.map(
+							(d) => DIFFICULTY_COLORS[d.difficulty as Difficulty],
+						),
+						borderRadius: 8,
+					},
+				],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+			},
+		});
+	} catch (error) {
+		console.error("Error creating difficulty chart:", error);
 	}
-
-	difficultyChartInstance = new Chart(ctx, {
-		type: "bar",
-		data: {
-			labels,
-			datasets: [
-				{
-					label: "Average Solve Time (minutes)",
-					data,
-					backgroundColor: Object.values(DIFFICULTY_COLORS),
-					borderRadius: 8,
-				},
-			],
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false,
-			plugins: {
-				legend: {
-					display: false,
-				},
-				tooltip: {
-					callbacks: {
-						label(context: any): string {
-							return `Average: ${context.formattedValue} minutes`;
-						},
-					},
-				},
-			},
-			scales: {
-				y: {
-					beginAtZero: true,
-					title: {
-						display: true,
-						text: "Minutes",
-					},
-				},
-			},
-		},
-	});
 }
 
 function createProgressChart(results: TimerResult[], difficulty: string): void {
@@ -270,10 +277,12 @@ function handleFilterChange(): void {
 }
 
 // Initialize dashboard
-chrome.storage.local.get("results", (data: any) => {
-	const results = data.results || [];
-	updateFilters(results);
-	handleFilterChange();
+document.addEventListener("DOMContentLoaded", () => {
+	chrome.storage.sync.get(["results"], (data) => {
+		const results = data.results || [];
+		updateFilters(results);
+		handleFilterChange();
+	});
 });
 
 // Event listeners
@@ -367,5 +376,91 @@ chrome.storage.onChanged.addListener((changes) => {
 	if (changes.results) {
 		renderStats(changes.results.newValue);
 		renderTimeline(changes.results.newValue);
+	}
+});
+
+// Type-safe time range filter
+const timeRanges: Record<TimeRange, number> = {
+	week: 7 * 24 * 60 * 60 * 1000,
+	month: 30 * 24 * 60 * 60 * 1000,
+	year: 365 * 24 * 60 * 60 * 1000,
+	all: 0,
+};
+
+function filterByTimeRange(
+	results: TimerResult[],
+	range: TimeRange,
+): TimerResult[] {
+	const now = Date.now();
+	const timeFilter = now - timeRanges[range];
+	return results.filter((r) => r.timestamp >= timeFilter);
+}
+
+// Get data from both sync and local storage
+async function getAllResults(): Promise<TimerResult[]> {
+	return new Promise((resolve) => {
+		chrome.storage.sync.get(["results"], (syncData) => {
+			chrome.storage.local.get(["currentSession"], (localData) => {
+				const syncResults = syncData.results || [];
+				const session: Session = localData.currentSession || {
+					problems: [],
+					startedAt: Date.now(),
+				};
+
+				// Convert current session problems to TimerResult format
+				const sessionResults = session.problems
+					.filter((p: Problem): p is Required<Problem> => !!p.endTime)
+					.map(
+						(p): TimerResult => ({
+							difficulty: p.difficulty,
+							timeMs: p.timeMs || 0,
+							platform: p.platform,
+							timestamp: p.startTime,
+						}),
+					);
+
+				resolve([...syncResults, ...sessionResults]);
+			});
+		});
+	});
+}
+
+function filterByPlatform(
+	results: TimerResult[],
+	platform: string,
+): TimerResult[] {
+	return platform === "all"
+		? results
+		: results.filter((r) => r.platform === platform);
+}
+
+function updateDashboard(): void {
+	getAllResults().then((results) => {
+		const timeRange = timeRangeSelect.value as TimeRange;
+		const platform = platformSelect.value;
+
+		let filteredResults = results;
+		filteredResults = filterByTimeRange(filteredResults, timeRange);
+		filteredResults = filterByPlatform(filteredResults, platform);
+
+		updateStatistics(filteredResults);
+		createDifficultyChart(filteredResults);
+		createProgressChart(filteredResults, difficultySelect.value);
+		updateFilters(results);
+	});
+}
+
+// Update event handlers
+platformSelect.addEventListener("change", updateDashboard);
+timeRangeSelect.addEventListener("change", updateDashboard);
+difficultySelect.addEventListener("change", updateDashboard);
+
+// Initialize dashboard
+updateDashboard();
+
+// Listen for storage changes
+chrome.storage.onChanged.addListener((changes) => {
+	if (changes.results || changes.currentSession) {
+		updateDashboard();
 	}
 });
