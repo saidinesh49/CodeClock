@@ -1,4 +1,4 @@
-let e=null,i=!1,p,u,m,f;const T=()=>{chrome.runtime.onMessage.addListener((t,n,d)=>{t.type==="START_TIMER"?h(t.difficulty):t.type==="STOP_TIMER"&&a()})};T();const h=t=>{e&&a(),e=document.createElement("div"),e.id="codeclock-timer-container",e.style.cssText=`
+console.log("CodeClock: Content script loaded");let e=null,r=!1,p,u,m,f;const h=()=>{chrome.runtime.onMessage.addListener((t,n,o)=>(console.log("CodeClock: Message received:",t),t.type==="START_TIMER"?(T(t.difficulty),o({status:"Timer started"})):t.type==="STOP_TIMER"&&(d(),o({status:"Timer stopped"})),!0))};h();const T=t=>{console.log("CodeClock: Injecting timer for difficulty:",t),e&&d(),e=document.createElement("div"),e.id="codeclock-timer-container",e.style.cssText=`
     position: fixed;
     top: 20px;
     right: 20px;
@@ -10,7 +10,11 @@ let e=null,i=!1,p,u,m,f;const T=()=>{chrome.runtime.onMessage.addListener((t,n,d
     display: flex;
     align-items: center;
     gap: 8px;
-  `;let n=0;const d=()=>{const s=Math.floor(n/60),y=n%60;r.textContent=`${s.toString().padStart(2,"0")}:${y.toString().padStart(2,"0")}`,n++},c=document.createElement("div");c.style.cssText=`
+    width: fit-content;
+    max-width: 200px;
+    white-space: nowrap;
+    cursor: move;
+  `;let n=0;const o=()=>{const c=Math.floor(n/60),y=n%60;s.textContent=`${c.toString().padStart(2,"0")}:${y.toString().padStart(2,"0")}`,n++},a=document.createElement("div");a.style.cssText=`
     width: 8px;
     height: 8px;
     background: #ff375f;
@@ -22,15 +26,16 @@ let e=null,i=!1,p,u,m,f;const T=()=>{chrome.runtime.onMessage.addListener((t,n,d
       50% { opacity: 0.4; }
       100% { opacity: 1; }
     }
-  `,document.head.appendChild(l);const r=document.createElement("div");r.style.cssText=`
+  `,document.head.appendChild(l);const s=document.createElement("div");s.style.cssText=`
     color: white;
     font-family: monospace;
     font-size: 14px;
-  `;const o=document.createElement("button");o.innerHTML="⏹",o.style.cssText=`
+  `;const i=document.createElement("button");i.innerHTML="⏹",i.style.cssText=`
     background: none;
     border: none;
     color: #ffa116;
     cursor: pointer;
     padding: 0;
     font-size: 16px;
-  `,o.onclick=()=>{if(window.confirm("Are you sure you want to stop the timer?")){const s={type:"TIMER_STOPPED",data:{time:n,difficulty:t}};chrome.runtime.sendMessage(s),a()}},e.appendChild(c),e.appendChild(r),e.appendChild(o),document.body.appendChild(e);const v=setInterval(d,1e3);e.dataset.interval=v,e.addEventListener("mousedown",E),document.addEventListener("mousemove",x),document.addEventListener("mouseup",g)},a=()=>{e&&(clearInterval(Number(e.dataset.interval)),document.removeEventListener("mousemove",x),document.removeEventListener("mouseup",g),e.remove(),e=null,i=!1)};function E(t){e&&(m=t.clientX-e.offsetLeft,f=t.clientY-e.offsetTop,i=!0)}function x(t){!i||!e||(t.preventDefault(),p=t.clientX-m,u=t.clientY-f,e.style.left=p+"px",e.style.top=u+"px")}function g(){i=!1}
+  `,i.onclick=()=>{if(window.confirm("Are you sure you want to stop the timer?")){const c={type:"TIMER_STOPPED",data:{time:n,difficulty:t}};chrome.runtime.sendMessage(c),d()}},e.appendChild(a),e.appendChild(s),e.appendChild(i),document.body.appendChild(e);const v=setInterval(o,1e3);e.dataset.interval=v,e.addEventListener("mousedown",C),document.addEventListener("mousemove",x),document.addEventListener("mouseup",g)},d=()=>{e&&(clearInterval(Number(e.dataset.interval)),document.removeEventListener("mousemove",x),document.removeEventListener("mouseup",g),e.remove(),e=null,r=!1)};function C(t){e&&(m=t.clientX-e.offsetLeft,f=t.clientY-e.offsetTop,r=!0)}function x(t){!r||!e||(t.preventDefault(),p=t.clientX-m,u=t.clientY-f,e.style.left=p+"px",e.style.top=u+"px")}function g(){r=!1}
+//# sourceMappingURL=content.js.map

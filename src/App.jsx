@@ -19,21 +19,25 @@ const App = () => {
   const handleDifficultySelect = (selectedDifficulty) => {
     setDifficulty(selectedDifficulty);
     setIsTimerActive(true);
-    // In development, directly inject timer
-    if (import.meta.env.DEV) {
-      window.postMessage({
+    
+    // Send message to content script to inject timer
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (!tabs[0]?.id) {
+        console.error('No active tab found');
+        return;
+      }
+      
+      chrome.tabs.sendMessage(tabs[0].id, {
         type: 'START_TIMER',
         difficulty: selectedDifficulty
-      }, '*');
-    } else {
-      // Send message to content script to inject timer
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          type: 'START_TIMER',
-          difficulty: selectedDifficulty
-        });
+      }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('Error sending message:', chrome.runtime.lastError);
+        } else {
+          console.log('Timer start message sent successfully');
+        }
       });
-    }
+    });
     window.close(); // Close popup after selection
   };
 

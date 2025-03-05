@@ -19,7 +19,8 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "https://leetcode.com/*",
@@ -44,7 +45,8 @@
       "js": [
         "assets/colors.js",
         "assets/content.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [

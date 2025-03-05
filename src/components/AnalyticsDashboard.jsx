@@ -73,6 +73,18 @@ const AnalyticsDashboard = () => {
     return filtered.filter(item => item.timestamp >= timeFilters[timeFilter]);
   };
 
+  const processData = (data) => {
+    return {
+      byPlatform: data.reduce((acc, item) => {
+        const platform = item.platform;
+        if (!acc[platform]) acc[platform] = [];
+        acc[platform].push(item);
+        return acc;
+      }, {}),
+      // ... rest of the processing
+    };
+  };
+
   return (
     <DashboardContainer>
       <Header>

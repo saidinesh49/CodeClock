@@ -1,17 +1,53 @@
 const STORAGE_KEY = 'codeclock_data';
 
+const extractPlatform = (url) => {
+  try {
+    const hostname = new URL(url).hostname;
+    if (hostname.includes('leetcode')) return 'LeetCode';
+    if (hostname.includes('codechef')) return 'CodeChef';
+    if (hostname.includes('codeforces')) return 'CodeForces';
+    if (hostname.includes('atcoder')) return 'AtCoder';
+    if (hostname.includes('hackerearth')) return 'HackerEarth';
+    if (hostname.includes('hackerrank')) return 'HackerRank';
+    if (hostname.includes('geeksforgeeks')) return 'GeeksforGeeks';
+    return 'Other';
+  } catch (error) {
+    console.error('Error extracting platform:', error);
+    return 'Unknown';
+  }
+};
+
+const extractProblemTitle = (url, title) => {
+  try {
+    // Remove platform name and common words from title
+    const cleanTitle = title
+      .replace(/LeetCode|CodeChef|CodeForces|AtCoder|HackerEarth|HackerRank|GeeksforGeeks/g, '')
+      .replace(/Problem|Solution|Question|\|/g, '')
+      .trim();
+    return cleanTitle;
+  } catch (error) {
+    console.error('Error extracting problem title:', error);
+    return 'Unknown Problem';
+  }
+};
+
 export const saveTimerData = async (data) => {
   const currentData = await chrome.storage.local.get(STORAGE_KEY);
   const existingData = currentData[STORAGE_KEY] || [];
   
+  // Get current tab info
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const url = tab.url;
+  const title = tab.title;
+
   const newData = [...existingData, {
     ...data,
     timestamp: Date.now(),
-    platform: await getCurrentPlatform(),
+    url: url,
+    platform: extractPlatform(url),
+    problemTitle: extractProblemTitle(url, title),
     timeInSeconds: data.time,
-    timeFormatted: formatTime(data.time),
-    problemUrl: window.location.href,
-    problemTitle: document.title
+    timeFormatted: formatTime(data.time)
   }];
 
   try {
@@ -19,7 +55,8 @@ export const saveTimerData = async (data) => {
     console.log('Timer data saved successfully:', {
       difficulty: data.difficulty,
       time: formatTime(data.time),
-      platform: await getCurrentPlatform()
+      platform: extractPlatform(url),
+      problem: extractProblemTitle(url, title)
     });
   } catch (error) {
     console.error('Error saving timer data:', error);
@@ -28,22 +65,10 @@ export const saveTimerData = async (data) => {
 
 export const getTimerData = async () => {
   const data = await chrome.storage.local.get(STORAGE_KEY);
-  return data[STORAGE_KEY] || [];
-};
-
-const getCurrentPlatform = async () => {
-  const tab = await chrome.tabs.query({ active: true, currentWindow: true });
-  const url = tab[0].url;
-  
-  if (url.includes('leetcode.com')) return 'LeetCode';
-  if (url.includes('codechef.com')) return 'CodeChef';
-  if (url.includes('codeforces.com')) return 'CodeForces';
-  if (url.includes('atcoder.jp')) return 'AtCoder';
-  if (url.includes('hackerearth.com')) return 'HackerEarth';
-  if (url.includes('hackerrank.com')) return 'HackerRank';
-  if (url.includes('geeksforgeeks.org')) return 'GeeksforGeeks';
-  
-  return 'Other';
+  return (data[STORAGE_KEY] || []).map(item => ({
+    ...item,
+    platform: item.platform || extractPlatform(item.url)
+  }));
 };
 
 const formatTime = (seconds) => {

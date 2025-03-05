@@ -1,1 +1,2 @@
-chrome.runtime.onMessage.addListener((a,e,c)=>{a.type==="TIMER_STOPPED"&&chrome.storage.local.get("codeclock_data",t=>{const o=[...t.codeclock_data||[],{...a.data,timestamp:Date.now(),url:e.tab.url}];chrome.storage.local.set({codeclock_data:o})})});
+console.log("CodeClock: Background script loaded");chrome.runtime.onInstalled.addListener(()=>{console.log("CodeClock: Extension installed/updated")});chrome.runtime.onMessage.addListener((e,o,c)=>(console.log("CodeClock: Background received message:",e),e.type==="TIMER_STOPPED"&&chrome.storage.local.get("codeclock_data",t=>{const a=[...t.codeclock_data||[],{...e.data,timestamp:Date.now(),url:o.tab.url}];chrome.storage.local.set({codeclock_data:a})}),!0));
+//# sourceMappingURL=background.js.map

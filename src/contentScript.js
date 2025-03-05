@@ -1,3 +1,5 @@
+console.log('CodeClock: Content script loaded');
+
 let timerContainer = null;
 let isDragging = false;
 let currentX;
@@ -8,17 +10,22 @@ let initialY;
 // Setup message listener for both development and production
 const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log('CodeClock: Message received:', message);
     if (message.type === 'START_TIMER') {
       injectTimer(message.difficulty);
+      sendResponse({ status: 'Timer started' });
     } else if (message.type === 'STOP_TIMER') {
       removeTimer();
+      sendResponse({ status: 'Timer stopped' });
     }
+    return true; // Keep the message channel open for sendResponse
   });
 };
 
 setupMessageListener();
 
 const injectTimer = (difficulty) => {
+  console.log('CodeClock: Injecting timer for difficulty:', difficulty);
   if (timerContainer) {
     removeTimer();
   }
@@ -37,6 +44,10 @@ const injectTimer = (difficulty) => {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: fit-content;
+    max-width: 200px;
+    white-space: nowrap;
+    cursor: move;
   `;
 
   let time = 0;
