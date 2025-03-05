@@ -16,6 +16,24 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]'
       }
     },
+    target: 'esnext',
     outDir: 'build'
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+  esbuild: {
+    loader: 'jsx',
+    include: /src\/.*\.jsx?$/,
+    exclude: []
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx'
+      }
+    }
   }
 }); 

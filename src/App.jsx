@@ -13,6 +13,13 @@ const App = () => {
   const handleDifficultySelect = (selectedDifficulty) => {
     setDifficulty(selectedDifficulty);
     setIsTimerActive(true);
+    // Send message to content script to inject timer
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        type: 'START_TIMER',
+        difficulty: selectedDifficulty
+      });
+    });
     window.close(); // Close popup after selection
   };
 
