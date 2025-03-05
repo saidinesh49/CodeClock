@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "CodeClock",
+  "version": "1.0.0",
+  "description": "Track and analyze your coding problem-solving time",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://leetcode.com/*",
+    "https://www.codechef.com/*",
+    "https://codeforces.com/*",
+    "https://atcoder.jp/*",
+    "https://www.hackerearth.com/*",
+    "https://www.hackerrank.com/*",
+    "https://practice.geeksforgeeks.org/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://leetcode.com/*",
+        "https://www.codechef.com/*",
+        "https://codeforces.com/*",
+        "https://atcoder.jp/*",
+        "https://www.hackerearth.com/*",
+        "https://www.hackerrank.com/*",
+        "https://practice.geeksforgeeks.org/*"
+      ],
+      "js": ["assets/content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html", "assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+} 
