@@ -41,7 +41,10 @@
         "https://www.hackerrank.com/*",
         "https://practice.geeksforgeeks.org/*"
       ],
-      "js": ["assets/content.js"]
+      "js": [
+        "assets/colors.js",
+        "assets/content.js"
+      ]
     }
   ],
   "web_accessible_resources": [

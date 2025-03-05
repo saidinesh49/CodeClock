@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import './utils/chartRegister';
+import { setupChromeMock } from './utils/chromeMock';
 import DifficultySelector from './components/DifficultySelector';
 import FloatingTimer from './components/FloatingTimer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import { saveTimerData } from './utils/storage';
+
+// Setup Chrome mock for development
+if (import.meta.env.DEV) {
+  setupChromeMock();
+}
 
 const App = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -13,13 +19,21 @@ const App = () => {
   const handleDifficultySelect = (selectedDifficulty) => {
     setDifficulty(selectedDifficulty);
     setIsTimerActive(true);
-    // Send message to content script to inject timer
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {
+    // In development, directly inject timer
+    if (import.meta.env.DEV) {
+      window.postMessage({
         type: 'START_TIMER',
         difficulty: selectedDifficulty
+      }, '*');
+    } else {
+      // Send message to content script to inject timer
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          type: 'START_TIMER',
+          difficulty: selectedDifficulty
+        });
       });
-    });
+    }
     window.close(); // Close popup after selection
   };
 

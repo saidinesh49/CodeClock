@@ -1,0 +1,1 @@
+chrome.runtime.onMessage.addListener((a,e,c)=>{a.type==="TIMER_STOPPED"&&chrome.storage.local.get("codeclock_data",t=>{const o=[...t.codeclock_data||[],{...a.data,timestamp:Date.now(),url:e.tab.url}];chrome.storage.local.set({codeclock_data:o})})});

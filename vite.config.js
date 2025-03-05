@@ -4,11 +4,16 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  },
   build: {
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
         content: resolve(__dirname, 'src/contentScript.js'),
+        colors: resolve(__dirname, 'src/utils/colors.js'),
+        background: resolve(__dirname, 'src/background.js')
       },
       output: {
         entryFileNames: 'assets/[name].js',
