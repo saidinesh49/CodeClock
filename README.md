@@ -1,19 +1,27 @@
 <div align="center">
   <img src="images/logo.png" alt="CodeClock Logo" width="120" height="120" style="border-radius: 50%;">
-  <h1>CodeClock</h1>
-  <p>Your Professional Coding Timer for Technical Interviews</p>
+  <p><h1>CodeClock</h1>Your Coding Time Tracker⚡</p>
 </div>
 
-## About
+A Chrome extension that helps you to track and analyze your problem-solving speed across major coding platforms. Perfect for interview preparation and skill improvement.
 
-Track and analyze your problem-solving speed across major coding platforms. Perfect for interview preparation and skill improvement.
+## Features
 
-## Getting Started
+- 🕒 Real-time coding timer
+- 📊 Performance analytics
+- 🔄 Draggable timer
+- 💾 Historical data tracking
+- 📈 Detailed time analysis with charts
 
+## How to use?
 1. Install CodeClock extension
 2. Visit any problem (e.g.,`Two sum` problem on leetcode)
-3. Click the CodeClock icon and select difficult level of the problem., (`easy`, `medium`, `difficult`...more types)
-4. Start solving - your progress is automatically tracked
+3. Click the CodeClock extension icon while on a coding problem
+4. Select the difficulty level on the popup window.
+5. Start coding while the timer tracks your time
+6. Click stop when finished
+7. View your performance analytics in the dashboard
+
 
 ## Supported Platforms
 
@@ -24,6 +32,25 @@ Track and analyze your problem-solving speed across major coding platforms. Perf
 - HackerEarth
 - HackerRank
 - GeeksforGeeks
+
+## Tech Stack
+
+- React.js
+- Chrome Extension APIs
+- Chart.js for analytics
+- Material-UI components
+- Local Storage for data persistence
+
+## Installation
+
+1. Clone this repository
+2. Run `npm install`
+3. Run `npm run build`
+4. Load the extension in Chrome:
+   - Open chrome://extensions/
+   - Enable Developer Mode
+   - Click "Load unpacked"
+   - Select the `build` folder
 
 ## Core Features
 
