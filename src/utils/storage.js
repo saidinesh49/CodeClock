@@ -3,13 +3,20 @@ const STORAGE_KEY = 'codeclock_data';
 const extractPlatform = (url) => {
   try {
     const hostname = new URL(url).hostname;
-    if (hostname.includes('leetcode')) return 'LeetCode';
-    if (hostname.includes('codechef')) return 'CodeChef';
-    if (hostname.includes('codeforces')) return 'CodeForces';
-    if (hostname.includes('atcoder')) return 'AtCoder';
-    if (hostname.includes('hackerearth')) return 'HackerEarth';
-    if (hostname.includes('hackerrank')) return 'HackerRank';
-    if (hostname.includes('geeksforgeeks')) return 'GeeksforGeeks';
+    const platformMap = {
+      'leetcode.com': 'LeetCode',
+      'codechef.com': 'CodeChef',
+      'codeforces.com': 'CodeForces',
+      'atcoder.jp': 'AtCoder',
+      'hackerearth.com': 'HackerEarth',
+      'hackerrank.com': 'HackerRank',
+      'practice.geeksforgeeks.org': 'GeeksforGeeks',
+      'geeksforgeeks.org': 'GeeksforGeeks'
+    };
+
+    for (const [domain, platform] of Object.entries(platformMap)) {
+      if (hostname.includes(domain)) return platform;
+    }
     return 'Other';
   } catch (error) {
     console.error('Error extracting platform:', error);
@@ -31,7 +38,20 @@ const extractProblemTitle = (url, title) => {
   }
 };
 
+const validateTimerData = (data) => {
+  // Validate required fields
+  if (!data.difficulty || typeof data.difficulty !== 'string') return false;
+  if (!data.time || typeof data.time !== 'number') return false;
+  if (data.time < 0 || data.time > 86400) return false; // Max 24 hours
+  
+  return true;
+};
+
 export const saveTimerData = async (data) => {
+  if (!validateTimerData(data)) {
+    throw new Error('Invalid timer data');
+  }
+
   const currentData = await chrome.storage.local.get(STORAGE_KEY);
   const existingData = currentData[STORAGE_KEY] || [];
   
@@ -39,6 +59,13 @@ export const saveTimerData = async (data) => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = tab.url;
   const title = tab.title;
+  
+  // Validate URL
+  try {
+    new URL(url);
+  } catch {
+    throw new Error('Invalid URL');
+  }
 
   const newData = [...existingData, {
     ...data,

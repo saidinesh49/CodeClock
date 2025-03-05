@@ -6,6 +6,7 @@ let currentX;
 let currentY;
 let initialX;
 let initialY;
+let startTime;
 
 // Setup message listener for both development and production
 const setupMessageListener = () => {
@@ -24,18 +25,41 @@ const setupMessageListener = () => {
 
 setupMessageListener();
 
+// Load saved position and time on init
+const loadSavedState = () => {
+  const savedState = localStorage.getItem('codeclock_timer_state');
+  if (savedState) {
+    try {
+      const state = JSON.parse(savedState);
+      // Only restore if state is less than 24 hours old
+      if (Date.now() - state.timestamp < 24 * 60 * 60 * 1000) {
+        return state;
+      }
+    } catch (error) {
+      console.error('Error loading saved state:', error);
+    }
+  }
+  return null;
+};
+
 const injectTimer = (difficulty) => {
   console.log('CodeClock: Injecting timer for difficulty:', difficulty);
   if (timerContainer) {
     removeTimer();
   }
 
+  const savedState = loadSavedState();
+  startTime = savedState ? Date.now() - (savedState.time * 1000) : Date.now();
+
   timerContainer = document.createElement('div');
   timerContainer.id = 'codeclock-timer-container';
+  
+  // Set initial position from saved state or default
+  const initialPosition = savedState?.position || { x: 20, y: 20 };
   timerContainer.style.cssText = `
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: ${initialPosition.y}px;
+    left: ${initialPosition.x}px;
     z-index: 10000;
     background: ${window.codeclock_colors.background.paper};
     padding: 6px 12px;
@@ -50,12 +74,27 @@ const injectTimer = (difficulty) => {
     cursor: move;
   `;
 
-  let time = 0;
+  let time = savedState ? savedState.time : 0;
   const updateTimer = () => {
+    time = Math.floor((Date.now() - startTime) / 1000);
     const mins = Math.floor(time / 60);
     const secs = time % 60;
     timeText.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    time++;
+    
+    // Save state every second
+    saveTimerState();
+  };
+
+  const saveTimerState = () => {
+    localStorage.setItem('codeclock_timer_state', JSON.stringify({
+      time,
+      difficulty,
+      position: {
+        x: parseInt(timerContainer.style.left),
+        y: parseInt(timerContainer.style.top)
+      },
+      timestamp: Date.now()
+    }));
   };
 
   // Create live indicator
@@ -134,6 +173,7 @@ const removeTimer = () => {
     timerContainer.remove();
     timerContainer = null;
     isDragging = false;
+    localStorage.removeItem('codeclock_timer_state');
   }
 };
 
@@ -151,6 +191,7 @@ function drag(e) {
   currentY = e.clientY - initialY;
   timerContainer.style.left = currentX + "px";
   timerContainer.style.top = currentY + "px";
+  saveTimerState();
 }
 
 function dragEnd() {
