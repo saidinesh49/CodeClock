@@ -42,10 +42,58 @@ const ChartContainer = styled.div`
   margin-bottom: 24px;
 `;
 
+const DifficultyBadge = styled.span`
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: white;
+  background-color: ${props => {
+    switch (props.difficulty) {
+      case 'easy': return colors.difficulty.easy;
+      case 'medium': return colors.difficulty.medium;
+      case 'hard': return colors.difficulty.hard;
+      case 'easy-medium': return colors.difficulty.easy_medium;
+      case 'medium-hard': return colors.difficulty.medium_hard;
+      default: return colors.text.secondary;
+    }
+  }};
+`;
+
+const StatsGrid = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+`;
+
+const StatCard = styled.div`
+  background: ${colors.background.paper};
+  padding: 16px;
+  border-radius: 8px;
+  flex: 1;
+`;
+
+const StatValue = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+`;
+
+const StatLabel = styled.div`
+  font-size: 14px;
+  color: ${colors.text.secondary};
+`;
+
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
 const AnalyticsDashboard = () => {
   const [data, setData] = useState([]);
   const [timeFilter, setTimeFilter] = useState('week');
   const [platformFilter, setPlatformFilter] = useState('all');
+  const [difficultyFilter, setDifficultyFilter] = useState('all');
 
   const SUPPORTED_PLATFORMS = {
     LeetCode: 'leetcode.com',
@@ -123,10 +171,18 @@ const AnalyticsDashboard = () => {
 
   const processData = (data) => {
     return {
-      byPlatform: data.reduce((acc, item) => {
-        const platform = item.platform;
-        if (!acc[platform]) acc[platform] = [];
-        acc[platform].push(item);
+      byDifficulty: data.reduce((acc, item) => {
+        const difficulty = item.difficulty;
+        if (!acc[difficulty]) {
+          acc[difficulty] = {
+            count: 0,
+            totalTime: 0,
+            averageTime: 0
+          };
+        }
+        acc[difficulty].count++;
+        acc[difficulty].totalTime += item.timeInSeconds;
+        acc[difficulty].averageTime = acc[difficulty].totalTime / acc[difficulty].count;
         return acc;
       }, {}),
       // ... rest of the processing
@@ -152,6 +208,14 @@ const AnalyticsDashboard = () => {
             ))}
             <option value="Other">Other</option>
           </Select>
+          <Select value={difficultyFilter} onChange={e => setDifficultyFilter(e.target.value)}>
+            <option value="all">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="easy-medium">Easy-Medium</option>
+            <option value="medium-hard">Medium-Hard</option>
+          </Select>
         </FilterSection>
       </Header>
 
@@ -168,6 +232,20 @@ const AnalyticsDashboard = () => {
           options={chartOptions}
         />
       </ChartContainer>
+
+      <StatsGrid>
+        {Object.entries(processData(getFilteredData()).byDifficulty).map(([difficulty, stats]) => (
+          <StatCard key={difficulty}>
+            <DifficultyBadge difficulty={difficulty}>
+              {difficulty.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+              ).join('-')}
+            </DifficultyBadge>
+            <StatValue>{stats.count} problems</StatValue>
+            <StatLabel>Avg: {formatTime(stats.averageTime)}</StatLabel>
+          </StatCard>
+        ))}
+      </StatsGrid>
     </DashboardContainer>
   );
 };

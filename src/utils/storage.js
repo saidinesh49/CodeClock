@@ -40,7 +40,8 @@ const extractProblemTitle = (url, title) => {
 
 const validateTimerData = (data) => {
   // Validate required fields
-  if (!data.difficulty || typeof data.difficulty !== 'string') return false;
+  if (!data.difficulty || typeof data.difficulty !== 'string' || 
+      !['easy', 'medium', 'hard', 'easy-medium', 'medium-hard'].includes(data.difficulty)) return false;
   if (!data.time || typeof data.time !== 'number') return false;
   if (data.time < 0 || data.time > 86400) return false; // Max 24 hours
   

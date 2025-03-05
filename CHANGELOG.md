@@ -16,4 +16,8 @@
 - Content script for timer injection
 - Real-time timer state persistence
 - Build configuration with CRACO
-- Chart.js registration and setup 
+- Chart.js registration and setup
+
+### Fixed
+- Fixed time formatting in analytics dashboard statistics
+- Added proper time formatting function for average solving time display 

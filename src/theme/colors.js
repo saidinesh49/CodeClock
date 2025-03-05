@@ -14,9 +14,11 @@ export const colors = {
     secondary: '#8a8a8a'
   },
   difficulty: {
-    easy: '#00b8a3',
-    medium: '#ffc01e',
-    hard: '#ff375f'
+    easy: '#1cbf2c',
+    medium: '#f78316',
+    hard: '#ff375f',
+    easy_medium: '#e5aa14',
+    medium_hard: '#ea5252'
   },
   background: {
     default: '#1a1a1a',

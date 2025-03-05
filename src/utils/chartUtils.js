@@ -45,21 +45,37 @@ export const getChartData = (data) => {
 };
 
 export const getDifficultyDistribution = (data) => {
-  const difficulties = ['easy', 'medium', 'hard'];
+  const difficulties = ['easy', 'easy-medium', 'medium', 'medium-hard', 'hard'];
   const counts = difficulties.map(diff => 
     data.filter(item => item.difficulty === diff).length
   );
 
   return {
-    labels: difficulties.map(d => d.charAt(0).toUpperCase() + d.slice(1)),
+    labels: difficulties.map(d => {
+      if (d.includes('-')) {
+        const [first, second] = d.split('-');
+        return `${first.charAt(0).toUpperCase() + first.slice(1)}-${second.charAt(0).toUpperCase() + second.slice(1)}`;
+      }
+      return d.charAt(0).toUpperCase() + d.slice(1);
+    }),
     datasets: [{
       label: 'Problems Solved',
       data: counts,
       backgroundColor: [
         colors.difficulty.easy,
+        colors.difficulty.easy_medium,
         colors.difficulty.medium,
+        colors.difficulty.medium_hard,
         colors.difficulty.hard
       ]
     }]
   };
+};
+
+const difficultyColors = {
+  easy: colors.difficulty.easy,
+  medium: colors.difficulty.medium,
+  hard: colors.difficulty.hard,
+  'easy-medium': colors.difficulty.easy_medium,
+  'medium-hard': colors.difficulty.medium_hard
 }; 
