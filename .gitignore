@@ -10,7 +10,7 @@ CHANGELOG.md
 build.crx
 build.pem
 
-build
+build*
 node_modules
 *.local
 

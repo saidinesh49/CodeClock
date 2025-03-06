@@ -14,23 +14,32 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 - 🔄 Draggable timer
 - 💾 Historical data tracking
 
-## How to use?
+## How to Use?
+
 1. **Download the CodeClock Extension**:  
-   - [Click here to download](https://github.com/saidinesh49/CodeClock/releases/download/v1.0.0/build.crx).  
+   - [Click here to download](https://github.com/saidinesh49/CodeClock/releases/download/v1.0.0/build.zip).  
+   - Extract the downloaded `.zip` file to get the `build` folder.
+
 2. **Enable Developer Mode**:  
    - Open Chrome.  
    - Go to **Menu** > **Extensions** > **Manage Extensions**.  
-   - Toggle on **Developer Mode** (you’ll see the option at the top-right corner). 
-3. **Install the Extension**:  
-   - Drag and drop the downloaded `.crx` file onto the **Load unpacked** 
-4. **Pin CodeClock for Easy Access**: 
+   - Toggle on **Developer Mode** (you’ll see the option at the top-right corner).  
+
+3. **Load the Extension**:  
+   - Click **Load unpacked**.  
+   - Select the extracted `build` folder.  
+
+4. **Pin CodeClock for Easy Access**:  
    - Click the puzzle icon (Extensions) in the top-right corner of the browser.  
-   - Find CodeClock and click the pin icon.
-5. **Start Using it⚡**:
+   - Find CodeClock and click the pin icon.  
+
+5. **Start Using it⚡**:  
    - Visit any coding problem (e.g., the `Two Sum` problem on LeetCode).  
    - Click the **CodeClock** extension icon in the toolbar.  
+
 6. **Select Difficulty**:  
    - In the popup window, choose the difficulty level of the problem (`Easy`, `Medium`, or `Hard`).  
+
 7. **Now, go ahead and code**:  
    - Begin coding while CodeClock tracks your progress.  
 
