@@ -9,19 +9,36 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 
 - 🕒 Real-time coding timer
 - 📊 Performance analytics
+- 📈 Difficulty Specific analysis.
+- 📈 platform Specific analysis
 - 🔄 Draggable timer
 - 💾 Historical data tracking
-- 📈 Detailed time analysis with charts
 
 ## How to use?
-1. Install CodeClock extension
-2. Visit any problem (e.g.,`Two sum` problem on leetcode)
-3. Click the CodeClock extension icon while on a coding problem
-4. Select the difficulty level on the popup window.
-5. Start coding while the timer tracks your time
-6. Click stop when finished
-7. View your performance analytics in the dashboard
+1. **Download the CodeClock Extension**:  
+   - [Click here to download](https://github.com/saidinesh49/CodeClock/releases/download/v1.0.0/build.crx).  
+2. **Enable Developer Mode**:  
+   - Open Chrome.  
+   - Go to **Menu** > **Extensions** > **Manage Extensions**.  
+   - Toggle on **Developer Mode** (you’ll see the option at the top-right corner). 
+3. **Install the Extension**:  
+   - Drag and drop the downloaded `.crx` file onto the **Load unpacked** 
+4. **Pin CodeClock for Easy Access**: 
+   - Click the puzzle icon (Extensions) in the top-right corner of the browser.  
+   - Find CodeClock and click the pin icon.
+5. **Start Using it⚡**:
+   - Visit any coding problem (e.g., the `Two Sum` problem on LeetCode).  
+   - Click the **CodeClock** extension icon in the toolbar.  
+6. **Select Difficulty**:  
+   - In the popup window, choose the difficulty level of the problem (`Easy`, `Medium`, or `Hard`).  
+7. **Now, go ahead and code**:  
+   - Begin coding while CodeClock tracks your progress.  
 
+8. **Stop the Timer**:  
+   - When you’re done, click **Stop** in the CodeClock popup.  
+
+9. **Analyze Your Performance**:  
+   - Open the **dashboard** to view detailed analytics, including your speed, trends, and insights.  
 
 ## Supported Platforms
 
@@ -40,17 +57,6 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 - Chart.js for analytics
 - Material-UI components
 - Local Storage for data persistence
-
-## Installation
-
-1. Clone this repository
-2. Run `npm install`
-3. Run `npm run build`
-4. Load the extension in Chrome:
-   - Open chrome://extensions/
-   - Enable Developer Mode
-   - Click "Load unpacked"
-   - Select the `build` folder
 
 ## Core Features
 
