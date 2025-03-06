@@ -29,8 +29,7 @@
     "https://atcoder.jp/*",
     "https://www.hackerearth.com/*",
     "https://www.hackerrank.com/*",
-    "https://practice.geeksforgeeks.org/*",
-    "https://geeksforgeeks.org/*"
+    "https://*.geeksforgeeks.org/*"
   ],
   "content_scripts": [
     {
