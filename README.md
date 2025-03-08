@@ -36,6 +36,8 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 5. **Start Using it⚡**:  
    - Visit any coding problem (e.g., the `Two Sum` problem on LeetCode).  
    - Click the **CodeClock** extension icon in the toolbar.  
+> [!IMPORTANT]
+> <code>➜ when using first time or If you’re visiting a platform where you haven’t used CodeClock before, refresh the page twice to ensure it works smoothly</code>
 
 6. **Select Difficulty**:  
    - In the popup window, choose the difficulty level of the problem (`Easy`, `Medium`, or `Hard`).  
