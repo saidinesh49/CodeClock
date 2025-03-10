@@ -5,6 +5,8 @@
 
 A Chrome extension that helps you to track and analyze your problem-solving speed across major coding platforms. Perfect for interview preparation and skill improvement.
 
+<strong>CodeClock Doesn't store any of your data., it is all upto your local device</strong>
+
 ## Features
 
 - 🕒 Real-time coding timer
