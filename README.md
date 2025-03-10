@@ -17,7 +17,7 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 ## How to Use?
 
 1. **Download the CodeClock Extension**:  
-   - [Click here to download](https://github.com/saidinesh49/CodeClock/releases/download/v1.0.0/build.zip).  
+   - [Click here to download](https://github.com/saidinesh49/CodeClock/releases/download/v1.0.1/build.zip).  
    - Extract the downloaded `.zip` file to get the `build` folder.
 
 2. **Enable Developer Mode**:  

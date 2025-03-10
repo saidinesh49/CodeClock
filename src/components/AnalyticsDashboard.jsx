@@ -176,15 +176,26 @@ const AnalyticsDashboard = () => {
           acc[difficulty] = {
             count: 0,
             totalTime: 0,
-            averageTime: 0
+            averageTime: 0,
+            bestTime: Infinity,
+            worstTime: 0
           };
         }
-        acc[difficulty].count++;
-        acc[difficulty].totalTime += item.timeInSeconds;
-        acc[difficulty].averageTime = acc[difficulty].totalTime / acc[difficulty].count;
+        
+        // Get time in seconds, handle both timeInSeconds and time properties
+        const timeInSeconds = item.timeInSeconds || item.time || 0;
+        
+        // Update stats only if we have valid time
+        if (timeInSeconds && timeInSeconds > 0) {
+          acc[difficulty].count++;
+          acc[difficulty].totalTime += timeInSeconds;
+          acc[difficulty].averageTime = Math.round(acc[difficulty].totalTime / acc[difficulty].count);
+          acc[difficulty].bestTime = Math.min(acc[difficulty].bestTime, timeInSeconds);
+          acc[difficulty].worstTime = Math.max(acc[difficulty].worstTime, timeInSeconds);
+        }
+        
         return acc;
-      }, {}),
-      // ... rest of the processing
+      }, {})
     };
   };
 
@@ -241,7 +252,9 @@ const AnalyticsDashboard = () => {
               ).join('-')}
             </DifficultyBadge>
             <StatValue>{stats.count} problems</StatValue>
-            <StatLabel>Avg: {formatTime(stats.averageTime)}</StatLabel>
+            <StatLabel>Average: {formatTime(stats.averageTime)}</StatLabel>
+            <StatLabel>Best: {stats.bestTime === Infinity ? '-' : formatTime(stats.bestTime)}</StatLabel>
+            <StatLabel>Worst: {stats.worstTime === 0 ? '-' : formatTime(stats.worstTime)}</StatLabel>
           </StatCard>
         ))}
       </StatsGrid>
