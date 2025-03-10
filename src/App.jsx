@@ -5,6 +5,7 @@ import { setupChromeMock } from './utils/chromeMock';
 import DifficultySelector from './components/DifficultySelector';
 import FloatingTimer from './components/FloatingTimer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
+import PopupAnalytics from './components/PopupAnalytics';
 import { saveTimerData } from './utils/storage';
 
 // Setup Chrome mock for development
@@ -65,17 +66,13 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/analytics" element={<AnalyticsDashboard />} />
-        <Route
-          path="/"
-          element={
-            isTimerActive ? (
-              <FloatingTimer onStop={handleTimerStop} />
-            ) : (
-              <DifficultySelector onSelectDifficulty={handleDifficultySelect} />
-            )
-          }
-        />
+        <Route path="/analytics" element={<AnalyticsDashboard isPopup={false} />} />
+        <Route path="/popup-analytics" element={<PopupAnalytics />} />
+        <Route path="/" element={
+          isTimerActive ? 
+            <FloatingTimer onStop={handleTimerStop} /> : 
+            <DifficultySelector onSelectDifficulty={handleDifficultySelect} />
+        } />
       </Routes>
     </Router>
   );
