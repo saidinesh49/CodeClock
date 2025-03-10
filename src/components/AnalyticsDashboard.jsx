@@ -70,65 +70,26 @@ const StatCard = styled.div`
   padding: 16px;
   border-radius: 8px;
   flex: 1;
-  transition: transform 0.2s;
-  
-  &:hover {
-    transform: translateY(-2px);
-  }
 `;
 
 const StatValue = styled.div`
   font-size: 18px;
   font-weight: bold;
-  margin: 8px 0;
-  color: ${colors.text.primary};
+  margin-bottom: 8px;
 `;
 
 const StatLabel = styled.div`
   font-size: 14px;
   color: ${colors.text.secondary};
-  margin-top: 4px;
-`;
-
-const DifficultyIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: ${props => props.color};
-  margin-right: 8px;
-`;
-
-const ViewMoreLink = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: ${colors.secondary.main};
-  text-decoration: none;
-  padding: 8px;
-  margin-top: 12px;
-  border-radius: 4px;
-  transition: all 0.2s;
-
-  &:hover {
-    background: ${colors.background.paper};
-    color: ${colors.secondary.light};
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 const formatTime = (seconds) => {
-  if (!seconds) return '0:00';
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-const AnalyticsDashboard = ({ isPopup = false }) => {
+const AnalyticsDashboard = () => {
   const [data, setData] = useState([]);
   const [timeFilter, setTimeFilter] = useState('week');
   const [platformFilter, setPlatformFilter] = useState('all');
@@ -221,12 +182,17 @@ const AnalyticsDashboard = ({ isPopup = false }) => {
           };
         }
         
-        const timeInSeconds = item.timeInSeconds || item.time;
-        acc[difficulty].count++;
-        acc[difficulty].totalTime += timeInSeconds;
-        acc[difficulty].averageTime = Math.floor(acc[difficulty].totalTime / acc[difficulty].count);
-        acc[difficulty].bestTime = Math.min(acc[difficulty].bestTime, timeInSeconds);
-        acc[difficulty].worstTime = Math.max(acc[difficulty].worstTime, timeInSeconds);
+        // Get time in seconds, handle both timeInSeconds and time properties
+        const timeInSeconds = item.timeInSeconds || item.time || 0;
+        
+        // Update stats only if we have valid time
+        if (timeInSeconds && timeInSeconds > 0) {
+          acc[difficulty].count++;
+          acc[difficulty].totalTime += timeInSeconds;
+          acc[difficulty].averageTime = Math.round(acc[difficulty].totalTime / acc[difficulty].count);
+          acc[difficulty].bestTime = Math.min(acc[difficulty].bestTime, timeInSeconds);
+          acc[difficulty].worstTime = Math.max(acc[difficulty].worstTime, timeInSeconds);
+        }
         
         return acc;
       }, {})
@@ -237,14 +203,6 @@ const AnalyticsDashboard = ({ isPopup = false }) => {
     <DashboardContainer>
       <Header>
         <Title>Coding Performance Analytics</Title>
-        {isPopup && (
-          <ViewMoreLink href="#/analytics" target="_blank">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3" />
-            </svg>
-            View Detailed Analysis
-          </ViewMoreLink>
-        )}
         <FilterSection>
           <Select value={timeFilter} onChange={e => setTimeFilter(e.target.value)}>
             <option value="week">Last Week</option>
@@ -295,8 +253,8 @@ const AnalyticsDashboard = ({ isPopup = false }) => {
             </DifficultyBadge>
             <StatValue>{stats.count} problems</StatValue>
             <StatLabel>Average: {formatTime(stats.averageTime)}</StatLabel>
-            <StatLabel>Best: {formatTime(stats.bestTime)}</StatLabel>
-            <StatLabel>Worst: {formatTime(stats.worstTime)}</StatLabel>
+            <StatLabel>Best: {stats.bestTime === Infinity ? '-' : formatTime(stats.bestTime)}</StatLabel>
+            <StatLabel>Worst: {stats.worstTime === 0 ? '-' : formatTime(stats.worstTime)}</StatLabel>
           </StatCard>
         ))}
       </StatsGrid>
