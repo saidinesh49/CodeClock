@@ -5,6 +5,9 @@
 
 A Chrome extension that helps you to track and analyze your problem-solving speed across major coding platforms. Perfect for interview preparation and skill improvement.
 
+> [!NOTE] 
+> <strong>CodeClock Doesn't store any of your data., it is all upto your local device</strong>
+
 ## Features
 
 - 🕒 Real-time coding timer
@@ -15,9 +18,13 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 - 💾 Historical data tracking
 
 <div align="center">
-<p><h2>Watch the demo to learn how to set up and use</h2></p>
-<video src="Guide/CodeClock-Guide.mp4" controls alt="CodeClock-Guide">
+  <h2>Watch the Demo to Learn How to Set Up and Use</h2>
+  <a href="https://drive.google.com/file/d/1eQrvOofXDuU7GhaNggAqunw9NyJaOkOR/view?usp=sharing" target="_blank" style="text-decoration: none; color: inherit;">
+    <span style="font-size: 1.5em; color: skyblue;">▶️ Click Here to Watch</span>
+  </a>
 </div>
+
+
 
 ## How to Use?
 
@@ -58,10 +65,10 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 
 
 <div align="center">
-<img src="Guide/img-1.png" style="border: 5px solid violet; border-radius: 10px;" alt="CodeClock-Image-1" width="500" height="300">
+<img src="Guide/img-1.png"  alt="CodeClock-Image-1" width="500" height="300">
 <div style="display: flex; gap: 20px;">
-    <img src="Guide/img-2.png" style="border: 5px solid violet; border-radius: 10px;" alt="CodeClock-Image-1" width="300" height="400">
-    <img src="Guide/img-3.png" style="border: 5px solid violet; border-radius: 10px;" alt="CodeClock-Image-1" width="300" height="400">
+    <img src="Guide/img-2.png" alt="CodeClock-Image-1" width="300" height="400">
+    <img src="Guide/img-3.png" alt="CodeClock-Image-1" width="300" height="400">
 </div>
 </div>
 
