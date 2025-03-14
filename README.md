@@ -14,6 +14,11 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 - 🔄 Draggable timer
 - 💾 Historical data tracking
 
+<div align="center">
+<p><h2>Watch the demo to learn how to set up and use</h2></p>
+<video src="Guide/CodeClock-Guide.mp4" controls alt="CodeClock-Guide">
+</div>
+
 ## How to Use?
 
 1. **Download the CodeClock Extension**:  
@@ -50,6 +55,15 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 
 9. **Analyze Your Performance**:  
    - Open the **dashboard** to view detailed analytics, including your speed, trends, and insights.  
+
+
+<div align="center">
+<img src="Guide/img-1.png" style="border: 5px solid violet; border-radius: 10px;" alt="CodeClock-Image-1" width="500" height="300">
+<div style="display: flex; gap: 20px;">
+    <img src="Guide/img-2.png" style="border: 5px solid violet; border-radius: 10px;" alt="CodeClock-Image-1" width="300" height="400">
+    <img src="Guide/img-3.png" style="border: 5px solid violet; border-radius: 10px;" alt="CodeClock-Image-1" width="300" height="400">
+</div>
+</div>
 
 ## Supported Platforms
 
