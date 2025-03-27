@@ -19,11 +19,9 @@ A Chrome extension that helps you to track and analyze your problem-solving spee
 
 <div align="center">
   <h2>Watch the Demo to Learn How to Set Up and Use</h2>
-  <a href="https://drive.google.com/file/d/1eQrvOofXDuU7GhaNggAqunw9NyJaOkOR/view?usp=sharing" target="_blank" style="text-decoration: none; color: inherit;">
-    <span style="font-size: 1.5em; color: skyblue;">▶️ Click Here to Watch</span>
-  </a>
 </div>
 
+https://github.com/user-attachments/assets/0ed2675e-41c4-4302-ad90-0d0f198f3999
 
 
 ## How to Use?
