@@ -1,22 +1,28 @@
-console.log('CodeClock: Background script loaded');
+const KEY = 'codeclock_data';
+const DIFFICULTIES = ['easy', 'medium', 'hard', 'easy-medium', 'medium-hard'];
 
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('CodeClock: Extension installed/updated');
-});
+// One save at a time, so quick back-to-back saves can't overwrite each other.
+let queue = Promise.resolve();
+
+const save = async (data, url) => {
+  const { time, difficulty, source } = data;
+  if (!DIFFICULTIES.includes(difficulty) || typeof time !== 'number' || time < 0 || time > 86400) {
+    throw new Error('Invalid timer data');
+  }
+  const stored = await chrome.storage.local.get(KEY);
+  const list = stored[KEY] || [];
+  list.push({ time, difficulty, platform: source, timestamp: Date.now(), date: new Date().toISOString(), url });
+  await chrome.storage.local.set({ [KEY]: list });
+};
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('CodeClock: Background received message:', message);
-  if (message.type === 'TIMER_STOPPED') {
-    // Handle timer data
-    chrome.storage.local.get('codeclock_data', (result) => {
-      const existingData = result.codeclock_data || [];
-      const newData = [...existingData, {
-        ...message.data,
-        timestamp: Date.now(),
-        url: sender.tab.url
-      }];
-      chrome.storage.local.set({ codeclock_data: newData });
+  if (message.type !== 'TIMER_STOPPED') return;
+  queue = queue
+    .then(() => save(message.data, sender.tab?.url || ''))
+    .then(() => sendResponse({ ok: true }))
+    .catch((e) => {
+      console.error('CodeClock: save failed', e);
+      sendResponse({ ok: false });
     });
-  }
-  return true;
-}); 
+  return true; // async response
+});

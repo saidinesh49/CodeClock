@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { Line, Bar } from 'react-chartjs-2';
 import { colors } from '../theme/colors';
-import { getTimerData } from '../utils/storage';
+import { getTimerData, SOURCES } from '../utils/storage';
 import { chartOptions, getChartData, getDifficultyDistribution } from '../utils/chartUtils';
 
 const DashboardContainer = styled.div`
@@ -40,6 +40,7 @@ const ChartContainer = styled.div`
   padding: 24px;
   border-radius: 8px;
   margin-bottom: 24px;
+  height: 320px;
 `;
 
 const DifficultyBadge = styled.span`
@@ -91,19 +92,9 @@ const formatTime = (seconds) => {
 
 const AnalyticsDashboard = () => {
   const [data, setData] = useState([]);
-  const [timeFilter, setTimeFilter] = useState('week');
+  const [timeFilter, setTimeFilter] = useState('all');
   const [platformFilter, setPlatformFilter] = useState('all');
   const [difficultyFilter, setDifficultyFilter] = useState('all');
-
-  const SUPPORTED_PLATFORMS = {
-    LeetCode: 'leetcode.com',
-    CodeForces: 'codeforces.com',
-    CodeChef: 'codechef.com',
-    GeeksforGeeks: 'geeksforgeeks.org',
-    AtCoder: 'atcoder.jp',
-    HackerEarth: 'hackerearth.com',
-    HackerRank: 'hackerrank.com'
-  };
 
   useEffect(() => {
     loadData();
@@ -131,21 +122,10 @@ const AnalyticsDashboard = () => {
   const getFilteredData = () => {
     let filteredData = [...data];
 
-    // Platform filtering
-    if (platformFilter !== 'all') {
-      if (platformFilter === 'Other') {
-        filteredData = filteredData.filter(item => {
-          const url = item.url.toLowerCase();
-          return !Object.values(SUPPORTED_PLATFORMS).some(domain => 
-            url.includes(domain.toLowerCase())
-          );
-        });
-      } else if (platformFilter !== 'all') {
-        const domain = SUPPORTED_PLATFORMS[platformFilter];
-        filteredData = filteredData.filter(item => 
-          item.url.toLowerCase().includes(domain.toLowerCase())
-        );
-      }
+    if (platformFilter === 'Other') {
+      filteredData = filteredData.filter(item => !SOURCES.includes(item.platform));
+    } else if (platformFilter !== 'all') {
+      filteredData = filteredData.filter(item => item.platform === platformFilter);
     }
 
     // Difficulty filtering
@@ -160,7 +140,8 @@ const AnalyticsDashboard = () => {
     const timeRanges = {
       week: now - (7 * 24 * 60 * 60 * 1000),
       month: now - (30 * 24 * 60 * 60 * 1000),
-      year: now - (365 * 24 * 60 * 60 * 1000)
+      year: now - (365 * 24 * 60 * 60 * 1000),
+      all: 0
     };
 
     return filteredData.filter(item => 
@@ -205,13 +186,14 @@ const AnalyticsDashboard = () => {
         <Title>Coding Performance Analytics</Title>
         <FilterSection>
           <Select value={timeFilter} onChange={e => setTimeFilter(e.target.value)}>
+            <option value="all">All Time</option>
             <option value="week">Last Week</option>
             <option value="month">Last Month</option>
             <option value="year">Last Year</option>
           </Select>
           <Select value={platformFilter} onChange={e => setPlatformFilter(e.target.value)}>
             <option value="all">All Platforms</option>
-            {Object.keys(SUPPORTED_PLATFORMS).map(platform => (
+            {SOURCES.map(platform => (
               <option key={platform} value={platform}>
                 {platform}
               </option>

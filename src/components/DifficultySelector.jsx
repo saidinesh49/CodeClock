@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { colors } from '../theme/colors';
+import { SOURCES, detectSource } from '../utils/storage';
 
 const Container = styled.div`
   padding: 12px;
@@ -67,46 +68,65 @@ const AnalyticsLink = styled.a`
   }
 `;
 
-const DifficultySelector = ({ onSelectDifficulty }) => {
+const SourceSelect = styled.select`
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 6px;
+  background: ${colors.background.paper};
+  color: ${colors.text.primary};
+  border: 1px solid ${colors.primary.light};
+  border-radius: 4px;
+`;
+
+const ErrorText = styled.div`
+  color: #ff375f;
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: center;
+`;
+
+const LEVELS = [
+  ['easy', 'Easy'],
+  ['medium', 'Medium'],
+  ['hard', 'Hard'],
+  ['easy-medium', 'Easy-Medium'],
+  ['medium-hard', 'Medium-Hard']
+];
+
+const DifficultySelector = ({ onStart, error }) => {
+  const [source, setSource] = useState('');
+
+  // Auto-detect from the active tab; the user can still change it.
+  useEffect(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      setSource(detectSource(tabs[0]?.url) || '');
+    });
+  }, []);
+
   return (
     <Container>
-      <Title>Select Problem Difficulty</Title>
+      <Title>Select Source & Difficulty</Title>
+      <SourceSelect value={source} onChange={(e) => setSource(e.target.value)}>
+        <option value="" disabled>Source</option>
+        {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+      </SourceSelect>
       <ButtonGrid>
-        <Button
-          difficulty="easy"
-          onClick={() => onSelectDifficulty('easy')}
-        >
-          Easy
-        </Button>
-        <Button
-          difficulty="medium"
-          onClick={() => onSelectDifficulty('medium')}
-        >
-          Medium
-        </Button>
-        <Button
-          difficulty="hard"
-          onClick={() => onSelectDifficulty('hard')}
-        >
-          Hard
-        </Button>
-        <Button
-          difficulty="easy-medium"
-          onClick={() => onSelectDifficulty('easy-medium')}
-        >
-          Easy-Medium
-        </Button>
-        <Button
-          difficulty="medium-hard"
-          onClick={() => onSelectDifficulty('medium-hard')}
-          style={{ gridColumn: 'span 2' }}
-        >
-          Medium-Hard
-        </Button>
+        {LEVELS.map(([level, label]) => (
+          <Button
+            key={level}
+            difficulty={level}
+            disabled={!source}
+            onClick={() => onStart(source, level)}
+            style={level === 'medium-hard' ? { gridColumn: 'span 2' } : undefined}
+          >
+            {label}
+          </Button>
+        ))}
       </ButtonGrid>
+      {error && <ErrorText>{error}</ErrorText>}
       <AnalyticsLink href="#/analytics">View Analysis</AnalyticsLink>
     </Container>
   );
 };
 
-export default DifficultySelector; 
+export default DifficultySelector;

@@ -29,7 +29,10 @@
     "https://atcoder.jp/*",
     "https://www.hackerearth.com/*",
     "https://www.hackerrank.com/*",
-    "https://*.geeksforgeeks.org/*"
+    "https://*.geeksforgeeks.org/*",
+    "https://cses.fi/*",
+    "https://*.codingninjas.com/*",
+    "https://www.naukri.com/code360/*"
   ],
   "content_scripts": [
     {
@@ -41,7 +44,10 @@
         "https://www.hackerearth.com/*",
         "https://www.hackerrank.com/*",
         "https://practice.geeksforgeeks.org/*",
-        "https://*.geeksforgeeks.org/*"
+        "https://*.geeksforgeeks.org/*",
+        "https://cses.fi/*",
+        "https://*.codingninjas.com/*",
+        "https://www.naukri.com/code360/*"
       ],
       "js": [
         "assets/colors.js",
